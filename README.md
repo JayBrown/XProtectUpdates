@@ -15,6 +15,7 @@
 * `ln -s xprotectupdates.sh /usr/local/bin/xprotectupdates.sh`
 * `cp local.lcars.XProtectUpdates.plist $HOME/Library/LaunchAgents/local.lcars.XProtectUpdates.plist`
 * `launchctl load $HOME/Library/LaunchAgents/local.lcars.XProtectUpdates.plist`
+* optional: install **[terminal-notifier](https://github.com/julienXX/terminal-notifier)**
 
 ### Notes
 The agent (and thereby the script) will run every 4 hours. If there has been an XProtect update, it's possible that Digita's **Xplorer** hasn't been updated yet, i.e. **XProtectUpdates** will not return any useful information on the contents of the update. This obviously still needs some testing, but if you want to be on the safe side, you can change the agent's frequency by editing the plist key `StartInterval`, e.g. from 4 to 8 hours.
