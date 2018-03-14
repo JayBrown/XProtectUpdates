@@ -4,7 +4,7 @@
 
 # XProtectUpdates <img src="https://github.com/JayBrown/XProtectUpdates/blob/master/img/jb-img.png" height="20px"/>
 
-**XProtectUpdates will notify the user when macOS XProtect has been updated.**
+**XProtectUpdates will notify the user when macOS XProtect has been updated. The LaunchAgent is run every 4 hours.**
 
 **XProtectUpdates also tries to get more information on the update from Digita Security's [Xplorer](https://digitasecurity.com/xplorer/).**
 
