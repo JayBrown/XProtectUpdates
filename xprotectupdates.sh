@@ -1,21 +1,27 @@
 #!/bin/bash
 
 # XProtectUpdates (xprotectupdates.sh)
-# v2.0.2
+# v2.0.3
 # Copyright (c) 2012–2018 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/XProtectUpdates
 
 export LANG=en_US.UTF-8
+export PATH=$PATH:/usr/local/bin:/opt/local/bin:/sw/bin
 
 localdate=$(date)
 account=$(id -un)
 process="XProtect"
 icon_loc="/System/Library/PreferencePanes/Security.prefPane/Contents/Resources/FileVault.icns"
+
 osversion=$(sw_vers -productVersion | awk -F. '{print $2}')
+scrname=$(basename $0)
+if [[ "$osversion" -le 7 ]] ; then
+	echo -e "Error! Incompatible OS version.\n$scrname needs at least OS X 10.8.\n*** Exiting... ***" >&2
+	exit
+fi
 
 _notify () {
-
 	if [[ "$tn_status" == "osa" ]] ; then
 		osascript &>/dev/null << EOT
 tell application "System Events"
