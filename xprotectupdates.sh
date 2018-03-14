@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # XProtectUpdates (xprotectupdates.sh)
-# v2.0.1
+# v2.0.2
 # Copyright (c) 2012–2018 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/XProtectUpdates
@@ -12,6 +12,7 @@ localdate=$(date)
 account=$(id -un)
 process="XProtect"
 icon_loc="/System/Library/PreferencePanes/Security.prefPane/Contents/Resources/FileVault.icns"
+osversion=$(sw_vers -productVersion | awk -F. '{print $2}')
 
 _notify () {
 
@@ -48,14 +49,14 @@ echo "***********************************"
 echo "Local date: $localdate"
 echo "Process run by: $account"
 
-xpndir="$HOME/.xpn"
-if ! [[ -d "$xpndir" ]] ; then
-	echo "No .xpn directory detected." >&2
-	echo "Creating .xpn directory..." >&2
-	mkdir -p "$xpndir"
-	echo ".xpn directory created." >&2
+cachedir="$HOME/.cache/xpu"
+if ! [[ -d "$cachedir" ]] ; then
+	echo "No cache directory detected." >&2
+	echo "Creating cache directory..." >&2
+	mkdir -p "$cachedir"
+	echo "Cache directory created." >&2
 else
-	echo ".xpn directory detected."
+	echo "Cache directory detected."
 fi
 
 logloc="$HOME/Library/Logs/local.lcars.XProtectUpdates.log"
@@ -68,7 +69,7 @@ else
 	echo "XProtectUpdates log file detected."
 fi
 
-if ! [[ -f "$xpndir/XProtect.meta.plist" ]] ; then
+if ! [[ -f "$cachedir/XProtect.meta.plist" ]] ; then
 	echo "XProtectUpdates initial run."
 	echo "No XProtect.meta.plist backup detected." >&2
 	echo "Creating XProtect.meta.plist backup..." >&2
@@ -76,7 +77,7 @@ if ! [[ -f "$xpndir/XProtect.meta.plist" ]] ; then
 	ixpversion=$(defaults read /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist Version)
 	echo "XProtect version: v$ixpversion"
 	echo "Updated: $ipldate"
-	cp /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist "$xpndir/XProtect.meta.plist"
+	cp /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist "$cachedir/XProtect.meta.plist"
 	echo "XProtect.meta.plist backed up." >&2
 	echo "*** Exiting... ***"
 	exit
@@ -117,17 +118,19 @@ else
 fi
 
 ### needs testing before implementation
+# if [[ "$osversion" -ge 12 ]] ; then
 # softwareupdate -l --include-config-data && softwareupdate -i XProtectPlistConfigData-1.0 --include-config-data
+# fi
 
 pldate=$(stat -f "%Sc" /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist)
 nxpversion=$(defaults read /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist Version)
 
-if [[ $(md5 -q /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist) == $(md5 -q "$xpndir/XProtect.meta.plist") ]] ; then
+if [[ $(md5 -q /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist) == $(md5 -q "$cachedir/XProtect.meta.plist") ]] ; then
 	echo "XProtect status: unchanged"
 	echo "XProtect version: $nxpversion"
 	echo "Updated: $pldate"
 else
-	oxpversion=$(defaults read "$xpndir/XProtect.meta.plist" Version)
+	oxpversion=$(defaults read "$cachedir/XProtect.meta.plist" Version)
 	_beep
 	echo "XProtect status: updated from v$oxpversion to v$nxpversion on $pldate."
 	logbody="New XProtect update\nv$oxpversion > v$nxpversion\nDate: $pldate"
@@ -183,7 +186,7 @@ else
 	logbody=$(echo -e "$logbody" | grep -v "^$")
 	logger -i -s -t XProtectUpdates "$logbody" 2>> "$logloc"
 	echo "Creating new XProtect.meta.plist backup..."
-	cp /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist "$xpndir/XProtect.meta.plist"
+	cp /System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist "$cachedir/XProtect.meta.plist"
 	echo "XProtect.meta.plist backup created."
 fi
 
