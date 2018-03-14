@@ -18,7 +18,7 @@
 * optional: install **[terminal-notifier](https://github.com/julienXX/terminal-notifier)**
 
 ### Testing
-You can test the LaunchAgent and shell script by running the following command sequence:
+After running the LaunchAgent at least once, e.g. with `launchctl start local.lcars.XProtectUpdates`, you can test the XProtect update notification functionality by entering the following command sequence:
 
 `plutil -replace Version -integer 2098 "$HOME/.cache/xpu/XProtect.meta.plist" && launchctl start local.lcars.XProtectUpdates`
 
