@@ -8,6 +8,8 @@
 
 **XProtectUpdates also tries to get more information on the update from Digita Security's [Xplorer](https://digitasecurity.com/xplorer/).**
 
+![screengrab](https://github.com/JayBrown/XProtectUpdates/blob/master/img/screengrab.jpg)
+
 ## Installation
 * clone repo
 * `ln -s xprotectupdates.sh /usr/local/bin/xprotectupdates.sh`

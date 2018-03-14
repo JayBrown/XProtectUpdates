@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # XProtectUpdates (xprotectupdates.sh)
-# v2.0
+# v2.0.1
 # Copyright (c) 2012–2018 Joss Brown (pseud.)
 # license: MIT+
 # info: https://github.com/JayBrown/XProtectUpdates
@@ -132,37 +132,54 @@ else
 	echo "XProtect status: updated from v$oxpversion to v$nxpversion on $pldate."
 	logbody="New XProtect update\nv$oxpversion > v$nxpversion\nDate: $pldate"
 	_notify "Update: v$oxpversion > v$nxpversion" "$pldate"
-	sigdata=$(curl -s "https://digitasecurity.com/xplorer/signatures/" 2>/dev/null | grep -B2 "$nxpversion")
-	extdata=$(curl -s "https://digitasecurity.com/xplorer/extensions/" 2>/dev/null | grep -B2 "$nxpversion")
-	plgdata=$(curl -s "https://digitasecurity.com/xplorer/plugins/" 2>/dev/null | grep -B2 "$nxpversion")
-	alldata="$sigdata\n$extdata\n$plgdata"
-	loopdata=$(echo -e "$alldata" | grep "href=" | grep -v "^$")
-	while read -r line
+	(( pings = 3 ))
+	while [[ $pings -ne 0 ]]
 	do
-		nerror=false
-		udname=$(echo "$line" | awk -F'[><]' '{print $5}' | xargs)
-		if [[ $udname == "" ]] ; then
-			udname="n/a"
-			nerror=true
-		fi
-		udref=$(echo "$line" | awk -F"href=" '{print $2}' | awk -F"/>" '{print $1}' | xargs)
-		if [[ $udref == "" ]] ; then
-			fullref="https://digitasecurity.com/xplorer/"
-		else
-			fullref="https://digitasecurity.com$udref"
-		fi
-		if $nerror ; then
-			uddate="n/a"
-		else
-			uddate=$(echo "$alldata" | grep -A1 -F "$udname" | tail -1 | awk -F'[><]' '{print $3}' | xargs)
-			uddate=$(date -j -f "%m.%d.%Y" "$uddate" +"%b %d %Y")
-		fi
-		echo "New entry: $udname"
-		echo "Date: $uddate"
-		echo "Info: $fullref"
-		! $nerror && _notify "New entry: $uddate" "$udname"
-		logbody="$logbody\nNew entry: $udname\nDate: $uddate\nInfo: $fullref"
-	done < <(echo -e "$loopdata")
+		ping -q -c 1 "digitasecurity.com" &>/dev/null
+		rc=$?
+		[[ $rc -eq 0 ]] && (( pings = 1 ))
+		(( pings = pings - 1 ))
+	done
+	if [[ $rc -eq 0 ]] ; then
+		echo "digitasecurity.com is online."
+		dsaccess=true
+	else
+		echo "digitasecurity.com seems to be offline."
+		dsaccess=false
+	fi
+	if $dsaccess ; then
+		sigdata=$(curl -s "https://digitasecurity.com/xplorer/signatures/" 2>/dev/null | grep -B2 "$nxpversion")
+		extdata=$(curl -s "https://digitasecurity.com/xplorer/extensions/" 2>/dev/null | grep -B2 "$nxpversion")
+		plgdata=$(curl -s "https://digitasecurity.com/xplorer/plugins/" 2>/dev/null | grep -B2 "$nxpversion")
+		alldata="$sigdata\n$extdata\n$plgdata"
+		loopdata=$(echo -e "$alldata" | grep "href=" | grep -v "^$")
+		while read -r line
+		do
+			nerror=false
+			udname=$(echo "$line" | awk -F'[><]' '{print $5}' | xargs)
+			if [[ $udname == "" ]] ; then
+				udname="n/a"
+				nerror=true
+			fi
+			udref=$(echo "$line" | awk -F"href=" '{print $2}' | awk -F"/>" '{print $1}' | xargs)
+			if [[ $udref == "" ]] ; then
+				fullref="https://digitasecurity.com/xplorer/"
+			else
+				fullref="https://digitasecurity.com$udref"
+			fi
+			if $nerror ; then
+				uddate="n/a"
+			else
+				uddate=$(echo "$alldata" | grep -A1 -F "$udname" | tail -1 | awk -F'[><]' '{print $3}' | xargs)
+				uddate=$(date -j -f "%m.%d.%Y" "$uddate" +"%b %d %Y")
+			fi
+			echo "New entry: $udname"
+			echo "Date: $uddate"
+			echo "Info: $fullref"
+			! $nerror && _notify "New entry: $uddate" "$udname"
+			logbody="$logbody\nNew entry: $udname\nDate: $uddate\nInfo: $fullref"
+		done < <(echo -e "$loopdata")
+	fi
 	logbody=$(echo -e "$logbody" | grep -v "^$")
 	logger -i -s -t XProtectUpdates "$logbody" 2>> "$logloc"
 	echo "Creating new XProtect.meta.plist backup..."
