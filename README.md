@@ -10,14 +10,14 @@
 
 ## Installation
 * clone repo
-* `ln -s xprotectnotify.sh /usr/local/bin/xprotectnotify.sh`
+* `ln -s xprotectupdates.sh /usr/local/bin/xprotectupdates.sh`
 * `cp local.lcars.XProtectUpdates.plist $HOME/Library/LaunchAgents/local.lcars.XProtectUpdates.plist`
 * `launchctl load $HOME/Library/LaunchAgents/local.lcars.XProtectUpdates.plist`
 
 ## Uninstall
 * `launchctl unload $HOME/Library/LaunchAgents/local.lcars.XProtectUpdates.plist`
 * remove the cloned XProtectUpdates GitHub repository
-* `rm -f /usr/local/bin/xprotectnotify.sh`
+* `rm -f /usr/local/bin/xprotectupdates.sh`
 * `rm -rf $HOME/.xpn`
 * `rm -f $HOME/Library/Logs/local.lcars.XProtectUpdates.log`
 * `rm -f /tmp/local.lcars.XProtectUpdates.stdout`
