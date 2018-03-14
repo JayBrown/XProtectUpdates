@@ -20,7 +20,7 @@
 ### Testing
 You can test the LaunchAgent and shell script by running the following command sequence:
 
-`plist="$HOME/.cache/xpu/XProtect.meta.plist" ; mv "$plist" "$plist.old" ; sed -e 's-<real>.*-<real>2098</real>-' "$plist.old" > "$plist" ; rm -f "$plist.old" ; launchctl start local.lcars.XProtectUpdates`
+`plutil -replace Version -integer 2098 "$HOME/.cache/xpu/XProtect.meta.plist" && launchctl start local.lcars.XProtectUpdates`
 
 ### Notes
 * The agent (and thereby the script) will run every 4 hours. If there has been an XProtect update, it's possible that Digita's **Xplorer** hasn't been updated yet, i.e. **XProtectUpdates** will not return any useful information on the contents of the update. This obviously still needs some testing, but if you want to be on the safe side, you can change the agent's frequency by editing the plist key `StartInterval`, e.g. from 4 to 8 hours.
