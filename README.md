@@ -12,7 +12,7 @@
 
 ## Installation
 * clone repo
-* `ln -s xprotectupdates.sh /usr/local/bin/xprotectupdates.sh`
+* `chmod +x xprotectupdates.sh && ln -s xprotectupdates.sh /usr/local/bin/xprotectupdates.sh`
 * `cp local.lcars.XProtectUpdates.plist $HOME/Library/LaunchAgents/local.lcars.XProtectUpdates.plist`
 * `launchctl load $HOME/Library/LaunchAgents/local.lcars.XProtectUpdates.plist`
 * optional: install **[terminal-notifier](https://github.com/julienXX/terminal-notifier)**
