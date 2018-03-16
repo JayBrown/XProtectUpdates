@@ -8,7 +8,7 @@
 
 **XPU also tries to get more information on the update from Digita Security's [Xplorer](https://digitasecurity.com/xplorer/).**
 
-**Note: XPU is not an XProtect management solution; for that you might also want to check out [UXProtect](https://digitasecurity.com/product/uxprotect/) by Digita Security.
+**Note: XPU is not an XProtect management solution; for that you might also want to check out [UXProtect](https://digitasecurity.com/product/uxprotect/) by Digita Security.**
 
 ![screengrab](https://github.com/JayBrown/XProtectUpdates/blob/master/img/screengrab.jpg)
 
