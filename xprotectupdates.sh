@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# XProtectUpdates (xprotectupdates.sh)
+# XProtectUpdates (XPU)
+# shell script: xprotectupdates.sh
 # v2.0.3
 # Copyright (c) 2012–2018 Joss Brown (pseud.)
 # license: MIT+
