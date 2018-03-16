@@ -10,6 +10,8 @@
 
 **Note: XPU is not an XProtect management solution; for that you might also want to check out [UXProtect](https://digitasecurity.com/product/uxprotect/) by Digita Security.**
 
+**If you want to receive update notifications on every relevant macOS Security component, you should use [macOS Security Updates](https://github.com/JayBrown/macOS-Security-Updates) instead.**
+
 ![screengrab](https://github.com/JayBrown/XProtectUpdates/blob/master/img/screengrab.jpg)
 
 ## Installation
